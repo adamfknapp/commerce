@@ -15,6 +15,7 @@ class category(models.Model):
 class listing(models.Model):
     title = models.CharField(max_length=20)
     description = models.CharField(max_length=5000, default="None")
+    category = models.ForeignKey(category, on_delete=models.CASCADE, related_name="listings")
     min_bid = models.IntegerField(default=1)
     time_create = models.DateTimeField(default= datetime.now())
     hours_to_end = models.IntegerField(default=1)
