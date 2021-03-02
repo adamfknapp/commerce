@@ -14,9 +14,9 @@ class category(models.Model):
 
 
 class listing(models.Model):
-    title = models.CharField(max_length=20)
+    title = models.CharField(max_length=20, unique=False)
     description = models.TextField(max_length=5000, default="no description")
-    creator = models.CharField(max_length=10, unique=True, default="default_user")
+    creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listings")
     photo = models.URLField(max_length=200, blank=True, null=True)
     category = models.ForeignKey(category, on_delete=models.CASCADE,
                                  related_name="listings", default="None")
@@ -25,16 +25,20 @@ class listing(models.Model):
     active_time = models.IntegerField(default=1)  # in hours
     close_early = models.BooleanField(default=False)  # requierment 15
 
+    #create form
+
     def __str__(self):
-        return f"title: {self.title} | is active: {self.isactive}"
+        return f"title: {self.title} | category: {self.category}"
 
 
 class bid(models.Model):
     time_create = models.DateTimeField(auto_now_add=True)
-    # bidder = request.user
+    bidder = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bids")
     listing = models.ForeignKey(listing, on_delete=models.CASCADE,
                                 related_name="bids")
     bid = models.DecimalField(max_digits=5, decimal_places=0, default=1)
+
+    #create form
 
     def __str__(self):
         return f"listing: {self.listing} | bid: {self.bid}"
@@ -42,10 +46,13 @@ class bid(models.Model):
 
 class comment(models.Model):
     time_create = models.DateTimeField(auto_now_add=True)
-    # bidder = request.user
+    creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments")
     listing = models.ForeignKey(listing, on_delete=models.CASCADE,
                                 related_name="comments")
     comment = models.CharField(max_length=100)
+
+
+    #create form
 
     def __str__(self):
         return f"listing: {self.listing} | bid: {self.comment}"

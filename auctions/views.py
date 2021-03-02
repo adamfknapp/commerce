@@ -3,8 +3,14 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.forms import ModelForm
 
-from .models import User
+from .models import User, listing
+
+class listing_form(ModelForm):
+    class Meta:
+        model = listing
+        fields = ["title", "description", "photo", "category", "start_bid", "active_time" ]
 
 
 def index(request):
