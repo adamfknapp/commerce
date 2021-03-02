@@ -25,8 +25,6 @@ class listing(models.Model):
     active_time = models.IntegerField(default=1)  # in hours
     close_early = models.BooleanField(default=False)  # requierment 15
 
-    #create form
-
     def __str__(self):
         return f"title: {self.title} | category: {self.category}"
 
@@ -37,8 +35,6 @@ class bid(models.Model):
     listing = models.ForeignKey(listing, on_delete=models.CASCADE,
                                 related_name="bids")
     bid = models.DecimalField(max_digits=5, decimal_places=0, default=1)
-
-    #create form
 
     def __str__(self):
         return f"listing: {self.listing} | bid: {self.bid}"
@@ -51,8 +47,6 @@ class comment(models.Model):
                                 related_name="comments")
     comment = models.CharField(max_length=100)
 
-
-    #create form
 
     def __str__(self):
         return f"listing: {self.listing} | bid: {self.comment}"
