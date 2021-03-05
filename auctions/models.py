@@ -29,6 +29,11 @@ class listing(models.Model):
         return f"title: {self.title} | category: {self.category}"
     
     def get_price(self):
+        """
+        get current price per requierment 8
+        sort bids in decending order of price and select 1st record
+        ensure current bid >= staring bid
+        """
         for bid in self.bids.order_by('-bid')[:1]:
             return max(bid.bid, self.start_bid)    
 
@@ -50,7 +55,6 @@ class comment(models.Model):
     listing = models.ForeignKey(listing, on_delete=models.CASCADE,
                                 related_name="comments")
     comment = models.CharField(max_length=100)
-
 
     def __str__(self):
         return f"listing: {self.listing} | bid: {self.comment}"
