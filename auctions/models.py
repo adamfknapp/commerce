@@ -35,8 +35,9 @@ class listing(models.Model):
         """
         deterine the current high bidder
         """
-        #return str(self.bids.order_by('-bid')[:1])
-
+        for bid in self.bids.order_by('-bid')[:1]:
+            return bid.bidder
+        
     def get_price(self):
         """
         get current price per requierment 8
@@ -47,7 +48,7 @@ class listing(models.Model):
             return max(bid.bid, self.start_bid) 
 
     def __str__(self):
-        return f"title: {self.title} | category: {self.category} | price: {self.get_price}"   
+        return f"title: {self.title} | category: {self.category}"   
 
         
 class bid(models.Model):

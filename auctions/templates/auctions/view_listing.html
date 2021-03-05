@@ -5,11 +5,10 @@
 <h1>{{  listing.title }} </h1>
 <p>category: {{  listing.category }}</p>
 <p>Description: {{  listing.description }}</p>
-<p>Price: {{  listing.get_price }}</p>
+<p>Current bid <b>{{  listing.get_price }} from {{listing.high_bidder}}</b> </p>
 <p>Starting bid: {{  listing.start_bid }}</p>
 <p>Created at: {{  listing.time_create}} GMT</p>
 <p>Number of bids: {{listing.num_bids}} </p>
-<!-- <p>High bidder: {{listing.high_bidder}} </p> -->
 
 {% if listing.photo %}
 <p><img src="{{listing.photo}}" width="600px"></p>
@@ -18,12 +17,3 @@
 {% endif  %}
    
 {% endblock %}
-
-<!-- 
-creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listings")
-photo = models.URLField(max_length=200, blank=True, null=True)
-category = models.ForeignKey(category, on_delete=models.CASCADE,
-                             related_name="listings", default="None")
-start_bid = models.DecimalField(max_digits=5, decimal_places=0, default=1)
-time_create = models.DateTimeField(auto_now_add=True)
-active_time -->
