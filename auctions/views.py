@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.forms import ModelForm
 
-from .models import User, listing
+from .models import User, listing, comment
 
 class listing_form(ModelForm):
     class Meta:
@@ -88,6 +88,10 @@ def create_listing(request):
 
 
 def view_listing(request, listing_id):
-        return render(request, "auctions/view_listing.html", {
-        "listing": listing.objects.get(pk =listing_id)
+    """
+    Limit comments to most recent activity
+    """
+    return render(request, "auctions/view_listing.html", {
+    "listing": listing.objects.get(pk =listing_id),
+    "comments": comment.objects.filter(listing= listing_id).order_by('-time_create')[:10]
     })

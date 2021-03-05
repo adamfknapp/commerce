@@ -15,5 +15,10 @@
 {% else %}
 <p><img src="http://www.actbus.net/fleetwiki/images/8/84/Noimage.jpg" width="200px"></p>
 {% endif  %}
+
+<h3>Recent Comments</h3>
+{% for comment in comments %}
+<p>{{ comment.time_create}} | {{ comment.creator}} | {{ comment.comment}}</p>
+{% endfor %}
    
 {% endblock %}
