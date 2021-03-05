@@ -88,6 +88,8 @@ def create_listing(request):
                 "listing_form": listing_form
             })
 
-            
-def view_listing(request):
-        return render(request, "auctions/view_listing.html")
+
+def view_listing(request, listing_title):
+        return render(request, "auctions/view_listing.html", {
+        "listing_title": listing_title
+    })

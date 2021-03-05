@@ -2,10 +2,10 @@
 
 {% block body %}
 <h1>Active Listings</h1>
-<a class="nav-link" href="{% url 'view_listing' %}">Test view listing</a>
+
 <ul>
     {% for listing in listings %}
-        <h3>{{listing.title}}</h3> 
+        <h3><a class="nav-link" href="view_listing/{{ listing.title }}">{{listing.title}}</a></h3> 
         <p>{{ listing.description}}</p> 
         <p>Current bid: {{ listing.get_price }}</p> 
         {% if listing.photo %}
