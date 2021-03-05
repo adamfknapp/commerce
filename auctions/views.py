@@ -14,7 +14,13 @@ class listing_form(ModelForm):
 
 
 def index(request):
-    return render(request, "auctions/index.html")
+    listings = listing.objects.all()
+    #bids = listings.bids.all()
+   
+    return render(request, "auctions/index.html", {
+                "listings": listings,
+         #       "bids": bids
+            })
 
 
 def login_view(request):
