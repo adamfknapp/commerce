@@ -24,10 +24,19 @@ class listing(models.Model):
     time_create = models.DateTimeField(auto_now_add=True)
     active_time = models.IntegerField(default=1)  # in hours
     close_early = models.BooleanField(default=False)  # requierment 15
-
-    def __str__(self):
-        return f"title: {self.title} | category: {self.category}"
     
+    def num_bids(self):
+        """
+        caluclate the number of bids on the listing
+        """
+        return len(list(self.bids.all()))
+
+    def high_bidder(self):
+        """
+        deterine the current high bidder
+        """
+        #return str(self.bids.order_by('-bid')[:1])
+
     def get_price(self):
         """
         get current price per requierment 8
@@ -35,7 +44,10 @@ class listing(models.Model):
         ensure current bid >= staring bid
         """
         for bid in self.bids.order_by('-bid')[:1]:
-            return max(bid.bid, self.start_bid)    
+            return max(bid.bid, self.start_bid) 
+
+    def __str__(self):
+        return f"title: {self.title} | category: {self.category} | price: {self.get_price}"   
 
         
 class bid(models.Model):

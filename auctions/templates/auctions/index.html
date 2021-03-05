@@ -5,13 +5,13 @@
 
 <ul>
     {% for listing in listings %}
-        <h3><a class="nav-link" href="view_listing/{{ listing.title }}">{{listing.title}}</a></h3> 
+        <h3><a class="nav-link" href="view_listing/{{ listing.id }}">{{listing.title}}</a></h3> 
         <p>{{ listing.description}}</p> 
         <p>Current bid: {{ listing.get_price }}</p> 
         {% if listing.photo %}
-            <p><img src="{{listing.photo}}" width="300px"></p>
+            <p><img src="{{listing.photo}}" width="200px"></p>
         {% else %}
-            <p><img src="http://www.actbus.net/fleetwiki/images/8/84/Noimage.jpg" width="300px"></p>
+            <p><img src="http://www.actbus.net/fleetwiki/images/8/84/Noimage.jpg" width="200px"></p>
         {% endif  %}
     {% endfor %}
 </ul>

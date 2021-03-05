@@ -15,11 +15,9 @@ class listing_form(ModelForm):
 
 def index(request):
     listings = listing.objects.all()
-    #bids = listings.bids.all()
    
     return render(request, "auctions/index.html", {
                 "listings": listings,
-         #       "bids": bids
             })
 
 
@@ -89,7 +87,7 @@ def create_listing(request):
             })
 
 
-def view_listing(request, listing_title):
+def view_listing(request, listing_id):
         return render(request, "auctions/view_listing.html", {
-        "listing_title": listing_title
+        "listing": listing.objects.get(pk =listing_id)
     })
