@@ -29,14 +29,10 @@ class listing(models.Model):
         return f"title: {self.title} | category: {self.category}"
     
     def get_price(self):
+        for bid in self.bids.order_by('-bid')[:1]:
+            return max(bid.bid, self.start_bid)    
+
         
-        print(self.bids.order_by('-bid')[:1])
-        max_= self.start_bid
-        for bid in self.bids.all():
-            if bid.bid > max_:
-                max_ = bid.bid
-        return max_
-    
 class bid(models.Model):
     time_create = models.DateTimeField(auto_now_add=True)
     bidder = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bids")
