@@ -3,14 +3,9 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from django.forms import ModelForm
 
 from .models import User, listing, comment
-
-class listing_form(ModelForm):
-    class Meta:
-        model = listing
-        fields = ["title", "description", "photo", "category", "start_bid", "active_time" ]
+from .forms import listing_form, comment_form
 
 
 def index(request):
@@ -93,5 +88,6 @@ def view_listing(request, listing_id):
     """
     return render(request, "auctions/view_listing.html", {
     "listing": listing.objects.get(pk =listing_id),
-    "comments": comment.objects.filter(listing= listing_id).order_by('-time_create')[:10]
+    "comments": comment.objects.filter(listing= listing_id).order_by('-time_create')[:10],
+    "comment_form": comment_form
     })
