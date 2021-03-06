@@ -89,7 +89,7 @@ def view_listing(request, listing_id):
         if 'submit_new_comment' in request.POST:
             form = comment_form(request.POST)
             if form.is_valid():
-                #obj = comment()
+                obj = comment()
                 #obj.creator = request.user
                 #obj.listing = request.POST.getlist('listing_title')
                 #obj.comment = request.POST.getlist('comment')
