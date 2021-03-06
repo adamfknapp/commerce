@@ -18,10 +18,13 @@
 
 <!-- COMMENTS------- -->
 <h3>Recent Comments</h3>
+    
     <form action="{% url 'view_listing' listing.id %}" method="post">
-        <p>New comment: {{ comment_form }} </p>
+        {% csrf_token %}
+        <input type="hidden" value="{{ listing.title }}" name="listing_title">
+        <p>{{ comment_form.comment }}  <input type="submit" name="submit_new_comment" value="Submit"> </p>
     </form>
-    <br>
+    
     {% for comment in comments %}
         <p>{{ comment.time_create}} | {{ comment.creator}} | {{ comment.comment}}</p>
     {% endfor %}
