@@ -6,7 +6,7 @@ from django.urls import reverse
 
 
 from .models import User, listing, comment
-from .forms import listing_form, comment_form, bid_form, active_form
+from .forms import listing_form, comment_form, bid_form
 
 
 def index(request):
@@ -78,7 +78,7 @@ def create_listing(request):
             listing.save()
             return HttpResponseRedirect(reverse("index"))
         else:
-            return render(request, "auctions/error.html", {
+            return render(request, "auctions/message.html", {
                 "message": "Something went wrong. listing not created."
             }) 
     else:
@@ -101,7 +101,7 @@ def view_listing(request, listing_id):
                 new_comment.save()
                 return HttpResponseRedirect(request.path_info)
             else:
-                return render(request, "auctions/error.html", {
+                return render(request, "auctions/message.html", {
                     "message": "Something went wrong. Comment failed."
                 }) 
 
@@ -118,23 +118,17 @@ def view_listing(request, listing_id):
                 new_bid.save()   
                 return HttpResponseRedirect(request.path_info)
             else:
-                return render(request, "auctions/error.html", {
+                return render(request, "auctions/message.html", {
                     "message": "Your bid was not accepted. Please try again."
                 })     
         
         # Update is active
-        elif "is_active" in request.POST:
-            f = active_form(request.POST)
-            if f.is_valid():
-                obj = f.save(commit=False)
-                #MyModel.objects.filter(pk=some_value).update(field1='some value')
-                obj.active = listing.objects.filter(pk =listing_id).update(active = False)
-                obj.save()
-                return HttpResponseRedirect(request.path_info)
-            else:
-                return render(request, "auctions/error.html", {
-                    "message": "Somewthing went wrong. Please try again."
-                })     
+        elif "close_listing" in request.POST:
+            listing.objects.filter(pk =listing_id).update(active = False)
+            return render(request, "auctions/message.html", {
+                    "message": "The auction was closed"
+                }) 
+  
 
     else:
         return render(request, "auctions/view_listing.html", {
@@ -142,6 +136,5 @@ def view_listing(request, listing_id):
             "comments": comment.objects.filter(listing= listing_id).order_by('-time_create'),
             "comment_form": comment_form,
             "bid_form": bid_form,
-            "active_form": active_form
         })
 

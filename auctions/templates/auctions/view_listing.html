@@ -20,7 +20,7 @@
         <h3>BID</h3>
             <p>Current bid <b>{{  listing.get_price }} from {{listing.high_bidder}}</b> </p>
             
-            {% if user.is_authenticated %}
+            {% if user.is_authenticated and listing.active %}
             <form action="{% url 'view_listing' listing.id %}" method="post">
                 {% csrf_token %}
                 <p>{{ bid_form.bid }}  <input type="submit" name="new_bid" value="BID!"> </p>
@@ -42,11 +42,10 @@
             {% endfor %}
         
         <!-- CLOSE LISTING ----->
-        {% if request.user == listing.creator and user.is_authenticated %}
-            <h3> Is active? </h3>
+        {% if request.user == listing.creator and user.is_authenticated  and listing.active%}
             <form action="{% url 'view_listing' listing.id %}" method="post">
                 {% csrf_token %}
-                <p>{{ active_form }}  <input type="submit" name="is_active" value="submit"> </p>
+                <input type="submit" name="close_listing" value="Close listing">
             </form>
         {% endif  %}
 
