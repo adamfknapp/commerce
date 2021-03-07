@@ -19,9 +19,9 @@
 <!-- COMMENTS------- -->
 <h3>Recent Comments</h3>
     
-    <form action="{% url 'add_comment' listing.id %}" method="post">
+    <form action="{% url 'view_listing' listing.id %}" method="post">
         {% csrf_token %}
-        <p>{{ comment_form.comment }}  <input type="submit" value="add comment"> </p>
+        <p>{{ comment_form.comment }}  <input type="submit" name="new_comment" value="add comment"> </p>
     </form>
     
     {% for comment in comments %}

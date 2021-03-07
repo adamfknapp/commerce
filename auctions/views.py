@@ -84,30 +84,22 @@ def create_listing(request):
 
 def view_listing(request, listing_id):
     if request.method == "POST":
-        print(f'--- POST request for {listing_id} ---')
-        return HttpResponseRedirect(request.path_info)
+        
+        # handle a new comment 
+        if "new_comment" in request.POST:
+            f = comment_form(request.POST)
+
+            if f.is_valid():
+                new_comment = f.save(commit=False)
+                new_comment.creator = request.user
+                new_comment.listing = listing.objects.get(pk =listing_id)
+                new_comment.save()
+                return HttpResponseRedirect(request.path_info)
 
     else:
         return render(request, "auctions/view_listing.html", {
             "listing": listing.objects.get(pk =listing_id),
-            "comments": comment.objects.filter(listing= listing_id).order_by('-time_create')[:10],
+            "comments": comment.objects.filter(listing= listing_id).order_by('-time_create'),
             "comment_form": comment_form
     })
 
-def add_comment(request, listing_id):
-    
-    if request.method == "POST":
-        f = comment_form(request.POST)
-
-        if f.is_valid():
-            new_comment = f.save(commit=False)
-            new_comment.creator = request.user
-            new_comment.listing = listing.objects.get(pk =listing_id)
-            new_comment.save()
-            return HttpResponseRedirect(reverse("index"))
-
-    return render(request, "auctions/view_listing.html", {
-        "listing": listing.objects.get(pk =listing_id),
-        "comments": comment.objects.filter(listing= listing_id).order_by('-time_create')[:10],
-        "comment_form": comment_form
-    })
