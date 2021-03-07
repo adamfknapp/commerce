@@ -6,8 +6,7 @@
     <h1>{{  listing.title }} </h1>
         <p>category: {{  listing.category }}</p>
         <p>Description: {{  listing.description }}</p>
-        <p>Current bid <b>{{  listing.get_price }} from {{listing.high_bidder}}</b> </p>
-        <p>Starting bid: {{  listing.get_price }}</p>
+        <p>Starting bid: {{  listing.start_bid }}</p>
         <p>Created at: {{  listing.time_create}} GMT</p>
         <p>Number of bids: {{listing.num_bids}} </p>
 
@@ -19,7 +18,7 @@
 
         <!-- BIDS --------->
         <h3>BID</h3>
-            
+            <p>Current bid <b>{{  listing.get_price }} from {{listing.high_bidder}}</b> </p>
             <form action="{% url 'view_listing' listing.id %}" method="post">
                 {% csrf_token %}
                 <p>{{ bid_form.bid }}  <input type="submit" name="new_bid" value="BID!"> </p>

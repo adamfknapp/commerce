@@ -42,10 +42,13 @@ class listing(models.Model):
         """
         get current price per requierment 8
         sort bids in decending order of price and select 1st record
-        ensure current bid >= staring bid
+        ensure current bid >= staring bid. Set current price before loop
+        in case no bids exist.  
         """
+        current_price = self.start_bid
         for bid in self.bids.order_by('-bid')[:1]:
-            return max(bid.bid, self.start_bid) 
+            current_price = max(bid.bid, current_price) 
+        return current_price
 
     def __str__(self):
         return f"title: {self.title} | category: {self.category}"   
