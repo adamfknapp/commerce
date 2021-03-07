@@ -4,8 +4,9 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
+
 from .models import User, listing, comment
-from .forms import listing_form, comment_form
+from .forms import listing_form, comment_form, bid_form
 
 
 def index(request):
@@ -76,6 +77,10 @@ def create_listing(request):
             listing.creator = request.user
             listing.save()
             return HttpResponseRedirect(reverse("index"))
+        else:
+            return render(request, "auctions/error.html", {
+                "message": "Something went wrong. listing not created."
+            }) 
     else:
         return render(request, "auctions/create_listing.html",{
                 "listing_form": listing_form
@@ -84,7 +89,7 @@ def create_listing(request):
 
 def view_listing(request, listing_id):
     if request.method == "POST":
-        
+       
         # handle a new comment 
         if "new_comment" in request.POST:
             f = comment_form(request.POST)
@@ -95,11 +100,33 @@ def view_listing(request, listing_id):
                 new_comment.listing = listing.objects.get(pk =listing_id)
                 new_comment.save()
                 return HttpResponseRedirect(request.path_info)
+            else:
+                return render(request, "auctions/error.html", {
+                    "message": "Something went wrong. Comment failed."
+                }) 
+
+        # handle a new bid
+        elif "new_bid" in request.POST:
+            f = bid_form(request.POST) 
+            submitted_bid = float(f['bid'].value())
+            current_price = listing.objects.get(pk =listing_id).get_price()
+            
+            if f.is_valid() and submitted_bid > current_price:
+                new_bid = f.save(commit=False)
+                new_bid.bidder = request.user
+                new_bid.listing = listing.objects.get(pk =listing_id)
+                new_bid.save()   
+                return HttpResponseRedirect(request.path_info)
+            else:
+                return render(request, "auctions/error.html", {
+                    "message": "Your bid was not accepted. Please try again."
+                })     
 
     else:
         return render(request, "auctions/view_listing.html", {
             "listing": listing.objects.get(pk =listing_id),
             "comments": comment.objects.filter(listing= listing_id).order_by('-time_create'),
-            "comment_form": comment_form
-    })
+            "comment_form": comment_form,
+            "bid_form": bid_form
+        })
 
