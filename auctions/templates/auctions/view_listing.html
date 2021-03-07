@@ -19,22 +19,31 @@
         <!-- BIDS --------->
         <h3>BID</h3>
             <p>Current bid <b>{{  listing.get_price }} from {{listing.high_bidder}}</b> </p>
+            
+            {% if user.is_authenticated %}
             <form action="{% url 'view_listing' listing.id %}" method="post">
                 {% csrf_token %}
                 <p>{{ bid_form.bid }}  <input type="submit" name="new_bid" value="BID!"> </p>
             </form>
-
+            {% endif  %}
 
         <!-- COMMENTS --------->
-        <h3>Recent Comments</h3>
+        <h3>Comments</h3>
             
+            {% if user.is_authenticated %}
             <form action="{% url 'view_listing' listing.id %}" method="post">
                 {% csrf_token %}
                 <p>{{ comment_form.comment }}  <input type="submit" name="new_comment" value="add comment"> </p>
             </form>
+            {% endif  %}
             
             {% for comment in comments %}
                 <p>{{ comment.time_create}} | {{ comment.creator}} | {{ comment.comment}}</p>
             {% endfor %}
+        
+        <!-- CLOSE LISTING ----->
+        {% if request.user == listing.creator and user.is_authenticated %}
+            <h3> Close listing? </h3>>
+        {% endif  %}
 
 {% endblock %}

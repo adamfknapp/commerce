@@ -15,3 +15,4 @@ class bid_form(ModelForm):
     class Meta:
         model = bid
         fields = ['bid']
+
