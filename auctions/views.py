@@ -5,15 +5,22 @@ from django.shortcuts import render
 from django.urls import reverse
 
 
-from .models import User, listing, comment
+from .models import User, listing, comment, category
 from .forms import listing_form, comment_form, bid_form
 
 def index(request):
     return HttpResponseRedirect(reverse("listings", kwargs={'isactive':True}))
 
+def categories(request):
+    categories = category.objects.all()
+    return render(request, "auctions/categories.html", {
+            "categories": categories
+            })
+
 def listings(request, isactive):
+    print(isactive)
     #convert isactive to boolean
-    if isactive.lower == 'true':
+    if isactive == 'True':
         isactive = True
     else:
         isactive = False
