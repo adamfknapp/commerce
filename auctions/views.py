@@ -3,17 +3,20 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+import json
 
 
 from .models import User, listing, comment
 from .forms import listing_form, comment_form, bid_form
 
 
-def index(request):
-    listings = listing.objects.all()
-   
+def listings(request, isactive):
+    #convert isactive to boolean
+    isactive = json.loads(isactive.lower())
+    listings = listing.objects.filter(active = isactive)
     return render(request, "auctions/index.html", {
                 "listings": listings,
+                "isactive": isactive
             })
 
 
