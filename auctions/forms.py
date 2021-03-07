@@ -9,4 +9,4 @@ class listing_form(ModelForm):
 class comment_form(ModelForm):
     class Meta:
         model = comment
-        fields = ['comment']#'__all__'
+        fields = ['comment']

@@ -84,35 +84,30 @@ def create_listing(request):
 
 def view_listing(request, listing_id):
     if request.method == "POST":
-        
-        # handle a new comment submission
-        if 'submit_new_comment' in request.POST:
-            form = comment_form(request.POST)
-            if form.is_valid():
-                obj = comment()
-                #obj.creator = request.user
-                #obj.listing = request.POST.getlist('listing_title')
-                #obj.comment = request.POST.getlist('comment')
-                #print(obj)
+        print(f'--- POST request for {listing_id} ---')
+        return HttpResponseRedirect(request.path_info)
 
-                #listing = form.save(commit=False)
-                #print('*** comment form is valid ***')
-                #print(request.POST.getlist('listing_id')[0]) 
-                #new_comment.creator = request.user
-                #print(new_comment)
-                #new_comment.listing = request.POST.getlist('listing_title')[0]
-                #new_comment.save()
-
-                
-                return HttpResponseRedirect(request.path_info)
-        
-        else:
-            print('=== post not handled ===')
-            return HttpResponseRedirect(request.path_info)
-   
     else:
         return render(request, "auctions/view_listing.html", {
             "listing": listing.objects.get(pk =listing_id),
             "comments": comment.objects.filter(listing= listing_id).order_by('-time_create')[:10],
             "comment_form": comment_form
+    })
+
+def add_comment(request, listing_id):
+    
+    if request.method == "POST":
+        f = comment_form(request.POST)
+
+        if f.is_valid():
+            new_comment = f.save(commit=False)
+            new_comment.creator = request.user
+            new_comment.listing = listing.objects.get(pk =listing_id)
+            new_comment.save()
+            return HttpResponseRedirect(reverse("index"))
+
+    return render(request, "auctions/view_listing.html", {
+        "listing": listing.objects.get(pk =listing_id),
+        "comments": comment.objects.filter(listing= listing_id).order_by('-time_create')[:10],
+        "comment_form": comment_form
     })
