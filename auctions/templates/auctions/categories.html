@@ -1,0 +1,9 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+    {% for category in categories %}
+        {{ category.name }}
+    {% endfor %}
+
+{% endblock %}

@@ -5,15 +5,29 @@ from django.shortcuts import render
 from django.urls import reverse
 
 
-from .models import User, listing, comment
+from .models import User, listing, comment, category
 from .forms import listing_form, comment_form, bid_form
 
-
 def index(request):
-    listings = listing.objects.all()
-   
+    return HttpResponseRedirect(reverse("listings", kwargs={'isactive':True}))
+
+def categories(request):
+    categories = category.objects.all()
+    return render(request, "auctions/categories.html", {
+            "categories": categories
+            })
+
+def listings(request, isactive):
+    print(isactive)
+    #convert isactive to boolean
+    if isactive == 'True':
+        isactive = True
+    else:
+        isactive = False
+    listings = listing.objects.filter(active = isactive)
     return render(request, "auctions/index.html", {
                 "listings": listings,
+                "isactive": isactive
             })
 
 
@@ -67,6 +81,7 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "auctions/register.html")
+
 
 def create_listing(request):
     if request.method == "POST":
