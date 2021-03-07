@@ -18,9 +18,10 @@ def categories(request):
             })
 
 def category_listing(request, category):
-    #categories = category.objects.all()
+    listings = listing.objects.filter(category = category, active = True)
     return render(request, "auctions/category_listings.html", {
-            "category": category
+            "category": category,
+            "listings": listings 
             })
 
 def listings(request, isactive):
