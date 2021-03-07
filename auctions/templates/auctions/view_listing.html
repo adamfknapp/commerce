@@ -2,30 +2,51 @@
 
 {% block body %}
 
-<h1>{{  listing.title }} </h1>
-<p>category: {{  listing.category }}</p>
-<p>Description: {{  listing.description }}</p>
-<p>Current bid <b>{{  listing.get_price }} from {{listing.high_bidder}}</b> </p>
-<p>Starting bid: {{  listing.start_bid }}</p>
-<p>Created at: {{  listing.time_create}} GMT</p>
-<p>Number of bids: {{listing.num_bids}} </p>
 
-{% if listing.photo %}
-<p><img src="{{listing.photo}}" width="600px"></p>
-{% else %}
-<p><img src="http://www.actbus.net/fleetwiki/images/8/84/Noimage.jpg" width="200px"></p>
-{% endif  %}
+    <h1>{{  listing.title }} </h1>
+        <p>category: {{  listing.category }}</p>
+        <p>Description: {{  listing.description }}</p>
+        <p>Starting bid: {{  listing.start_bid }}</p>
+        <p>Created at: {{  listing.time_create}} GMT</p>
+        <p>Number of bids: {{listing.num_bids}} </p>
 
-<!-- COMMENTS------- -->
-<h3>Recent Comments</h3>
-    
-    <form action="{% url 'view_listing' listing.id %}" method="post">
-        {% csrf_token %}
-        <p>{{ comment_form.comment }}  <input type="submit" name="new_comment" value="add comment"> </p>
-    </form>
-    
-    {% for comment in comments %}
-        <p>{{ comment.time_create}} | {{ comment.creator}} | {{ comment.comment}}</p>
-    {% endfor %}
-   
+        {% if listing.photo %}
+            <p><img src="{{listing.photo}}" width="600px"></p>
+        {% else %}
+            <p><img src="http://www.actbus.net/fleetwiki/images/8/84/Noimage.jpg" width="200px"></p>
+        {% endif  %}
+
+        <!-- BIDS --------->
+        <h3>BID</h3>
+            <p>Current bid <b>{{  listing.get_price }} from {{listing.high_bidder}}</b> </p>
+            
+            {% if user.is_authenticated and listing.active %}
+            <form action="{% url 'view_listing' listing.id %}" method="post">
+                {% csrf_token %}
+                <p>{{ bid_form.bid }}  <input type="submit" name="new_bid" value="BID!"> </p>
+            </form>
+            {% endif  %}
+
+        <!-- COMMENTS --------->
+        <h3>Comments</h3>
+            
+            {% if user.is_authenticated %}
+            <form action="{% url 'view_listing' listing.id %}" method="post">
+                {% csrf_token %}
+                <p>{{ comment_form.comment }}  <input type="submit" name="new_comment" value="add comment"> </p>
+            </form>
+            {% endif  %}
+            
+            {% for comment in comments %}
+                <p>{{ comment.time_create}} | {{ comment.creator}} | {{ comment.comment}}</p>
+            {% endfor %}
+        
+        <!-- CLOSE LISTING ----->
+        {% if request.user == listing.creator and user.is_authenticated  and listing.active%}
+            <form action="{% url 'view_listing' listing.id %}" method="post">
+                {% csrf_token %}
+                <input type="submit" name="close_listing" value="Close listing">
+            </form>
+        {% endif  %}
+
 {% endblock %}
