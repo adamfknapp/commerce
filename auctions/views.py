@@ -9,8 +9,10 @@ import json
 from .models import User, listing, comment
 from .forms import listing_form, comment_form, bid_form
 
+def index(request):
+    return HttpResponseRedirect(reverse("listings", kwargs={'isactive':True}))
 
-def listings(request, isactive):
+def listings(request, isactive=True):
     #convert isactive to boolean
     isactive = json.loads(isactive.lower())
     listings = listing.objects.filter(active = isactive)
