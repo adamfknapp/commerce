@@ -3,7 +3,9 @@
 {% block body %}
 
     {% for category in categories %}
-        {{ category.name }}
+    
+      <h5><a class="nav-link" href="{% url 'cateogry_listing' category.id %}">{{ category.name }}</a></h5>
+      
     {% endfor %}
 
 {% endblock %}

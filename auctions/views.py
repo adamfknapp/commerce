@@ -17,6 +17,12 @@ def categories(request):
             "categories": categories
             })
 
+def category_listing(request, category):
+    #categories = category.objects.all()
+    return render(request, "auctions/category_listings.html", {
+            "category": category
+            })
+
 def listings(request, isactive):
     print(isactive)
     #convert isactive to boolean
