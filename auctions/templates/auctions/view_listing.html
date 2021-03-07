@@ -4,6 +4,12 @@
 
 
     <h1>{{  listing.title }} </h1>
+
+    {% if not listing.active  %}
+        <h3 style="color:rgb(163, 25, 7);">LISTING CLOSED</h3>
+        <h4 style="color:rgb(163, 25, 7);" >{{listing.high_bidder}} won with a bid of {{ listing.get_price }} </h4>
+    {% endif %}
+    
         <p>category: {{  listing.category }}</p>
         <p>Description: {{  listing.description }}</p>
         <p>Starting bid: {{  listing.start_bid }}</p>
