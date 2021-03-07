@@ -12,7 +12,13 @@
     {% for listing in listings %}
         <h3><a class="nav-link" href="{% url 'view_listing' listing.id %}">{{listing.title}}</a></h3> 
         <p>{{ listing.description}}</p> 
-        <p>Current bid: {{ listing.get_price }}</p> 
+        
+        {% if isactive %}
+            <p>Current bid: {{ listing.get_price }}</p> 
+        {% else %}
+            <p>Winner: {{ listing.high_bidder }} with a bid of  {{ listing.get_price }} </p>
+        {% endif %}
+
         {% if listing.photo %}
             <p><img src="{{listing.photo}}" width="200px"></p>
         {% else %}
