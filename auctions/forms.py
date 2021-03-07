@@ -16,3 +16,7 @@ class bid_form(ModelForm):
         model = bid
         fields = ['bid']
 
+class active_form(ModelForm):
+    class Meta:
+        model = listing
+        fields = ['active']

@@ -22,8 +22,7 @@ class listing(models.Model):
                                  related_name="listings", default="None")
     start_bid = models.DecimalField(max_digits=5, decimal_places=0, default=1)
     time_create = models.DateTimeField(auto_now_add=True)
-    active_time = models.IntegerField(default=1)  # in hours
-    close_early = models.BooleanField(default=False)  # requierment 15
+    active = models.BooleanField(default=True)  # requierment 15
     
     def num_bids(self):
         """
