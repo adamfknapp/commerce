@@ -8,8 +8,10 @@ from django.urls import reverse
 from .models import User, listing, comment, category
 from .forms import listing_form, comment_form, bid_form
 
+
 def index(request):
-    return HttpResponseRedirect(reverse("listings", kwargs={'isactive':True}))
+    return HttpResponseRedirect(reverse("listings", kwargs={'isactive': True}))
+
 
 def categories(request):
     categories = category.objects.all()
@@ -17,21 +19,23 @@ def categories(request):
             "categories": categories
             })
 
+
 def category_listing(request, category):
-    listings = listing.objects.filter(category = category, active = True)
+    listings = listing.objects.filter(category=category, active=True)
     return render(request, "auctions/category_listings.html", {
             "category": category,
-            "listings": listings 
+            "listings": listings
             })
+
 
 def listings(request, isactive):
     print(isactive)
-    #convert isactive to boolean
+    # convert isactive to boolean
     if isactive == 'True':
         isactive = True
     else:
         isactive = False
-    listings = listing.objects.filter(active = isactive)
+    listings = listing.objects.filter(active=isactive)
     return render(request, "auctions/index.html", {
                 "listings": listings,
                 "isactive": isactive
@@ -102,61 +106,60 @@ def create_listing(request):
         else:
             return render(request, "auctions/message.html", {
                 "message": "Something went wrong. listing not created."
-            }) 
+            })
     else:
-        return render(request, "auctions/create_listing.html",{
+        return render(request, "auctions/create_listing.html", {
                 "listing_form": listing_form
             })
 
 
 def view_listing(request, listing_id):
     if request.method == "POST":
-       
-        # handle a new comment 
+
+        # handle a new comment
         if "new_comment" in request.POST:
             f = comment_form(request.POST)
 
             if f.is_valid():
                 new_comment = f.save(commit=False)
                 new_comment.creator = request.user
-                new_comment.listing = listing.objects.get(pk =listing_id)
+                new_comment.listing = listing.objects.get(pk=listing_id)
                 new_comment.save()
                 return HttpResponseRedirect(request.path_info)
             else:
                 return render(request, "auctions/message.html", {
                     "message": "Something went wrong. Comment failed."
-                }) 
+                })
 
         # handle a new bid
         elif "new_bid" in request.POST:
-            f = bid_form(request.POST) 
+            f = bid_form(request.POST)
             submitted_bid = float(f['bid'].value())
-            current_price = listing.objects.get(pk =listing_id).get_price()
-            
+            current_price = listing.objects.get(pk=listing_id).get_price()
+
             if f.is_valid() and submitted_bid > current_price:
                 new_bid = f.save(commit=False)
                 new_bid.bidder = request.user
-                new_bid.listing = listing.objects.get(pk =listing_id)
-                new_bid.save()   
+                new_bid.listing = listing.objects.get(pk=listing_id)
+                new_bid.save()
                 return HttpResponseRedirect(request.path_info)
             else:
                 return render(request, "auctions/message.html", {
                     "message": "Your bid was not accepted. Please try again."
-                })     
-        
+                })
+
         # Update is active
         elif "close_listing" in request.POST:
-            listing.objects.filter(pk =listing_id).update(active = False)
+            listing.objects.filter(pk=listing_id).update(active=False)
             return render(request, "auctions/message.html", {
                     "message": "The auction was closed"
-                }) 
-  
+                })
 
     else:
         return render(request, "auctions/view_listing.html", {
-            "listing": listing.objects.get(pk =listing_id),
-            "comments": comment.objects.filter(listing= listing_id).order_by('-time_create'),
+            "listing": listing.objects.get(pk=listing_id),
+            "comments": comment.objects.filter(listing=listing_id)
+                               .order_by('-time_create'),
             "comment_form": comment_form,
             "bid_form": bid_form,
         })
-
